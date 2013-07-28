@@ -1,0 +1,47 @@
+.tx-lpaccess table {
+	width: 650px;
+	border-width: 0 0 1px 1px;
+}
+
+.tx-lpaccess th,
+.tx-lpaccess td,
+.tx-lpaccess table {
+	border-color: #C0C0C0;
+	border-style: solid;
+}
+
+.tx-lpaccess th {
+	background-color: #DADADA;
+}
+
+.tx-lpaccess th,
+.tx-lpaccess td {
+	border-width: 1px 1px 0 0;
+	vertical-align: middle;
+	text-align: center;
+	height: 20px;
+}
+
+.tx-lpaccess td {
+	width: 24px;
+	cursor: pointer;
+}
+.tx-lpaccess td div {
+	border: 1px solid transparent;
+	border-radius: 2px;
+	width: 22px;
+	height: 18px;
+}
+
+.tx-lpaccess td.active div {
+	background-color: #1e5799;
+	background: linear-gradient(to bottom, #1e5799 0%, #246BBB 100%);
+	border-color: #ECECEC;
+}
+.tx-lpaccess td.changed div {
+	border-color: #FFE8B3;
+}
+
+.tx-lpaccess td.active:hover {
+	background-color: transparent;
+}

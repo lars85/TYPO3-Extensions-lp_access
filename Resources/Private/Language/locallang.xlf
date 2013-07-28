@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2013-03-27T07:36:46Z" product-name="lp_access">
+		<header/>
+		<body>
+			<trans-unit id="column.label">
+				<source>Access Hours</source>
+			</trans-unit>
+
+			<trans-unit id="day.1">
+				<source>Mo</source>
+			</trans-unit>
+			<trans-unit id="day.2">
+				<source>Tu</source>
+			</trans-unit>
+			<trans-unit id="day.3">
+				<source>We</source>
+			</trans-unit>
+			<trans-unit id="day.4">
+				<source>Th</source>
+			</trans-unit>
+			<trans-unit id="day.5">
+				<source>Fr</source>
+			</trans-unit>
+			<trans-unit id="day.6">
+				<source>Sa</source>
+			</trans-unit>
+			<trans-unit id="day.7">
+				<source>Su</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
