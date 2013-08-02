@@ -39,8 +39,9 @@ class AddEnableColumnsHook implements \TYPO3\CMS\Core\SingletonInterface {
 		if (!empty($params['ctrl']['enablecolumns']['tx_lpaccess_hours']) && empty($params['ignore_array']['tx_lpaccess_hours'])) {
 			$table = $params['table'];
 			$column = $params['ctrl']['enablecolumns']['tx_lpaccess_hours'];
-			$day = date('N');
-			$hour = date('H');
+			$now = $GLOBALS['ACCESS_TIME'];
+			$day = date('N', $now);
+			$hour = date('H', $now);
 			$query = ' AND (' . $table . '.' . $column . ' = "" OR ' . $table . '.' . $column . ' LIKE "%' . $day . $hour . '%")';
 		}
 		return $query;
