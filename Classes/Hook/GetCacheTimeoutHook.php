@@ -28,15 +28,13 @@ namespace LarsPeipmann\LpAccess\Hook;
 class GetCacheTimeoutHook implements \TYPO3\CMS\Core\SingletonInterface {
 
 	/**
-	 * Renders the cropping link and fancybox.
-	 *
-	 * @param array $PA
-	 * @param $fObj
-	 * @return string HTML output
+	 * @param array $params
+	 * @param \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $pageRepository
+	 * @return int
 	 */
 	public function process(array $params, \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $pageRepository) {
 		$cacheTimeout = $params['cacheTimeout'];
-		$tablesToConsider = $pageRepository->getCurrentPageCacheConfiguration();
+		$tablesToConsider = $this->getCurrentPageCacheConfiguration($pageRepository);
 		$now = $GLOBALS['ACCESS_TIME'];
 
 		foreach ($tablesToConsider as $tableDef) {
@@ -138,6 +136,35 @@ class GetCacheTimeoutHook implements \TYPO3\CMS\Core\SingletonInterface {
 			}
 		}
 		return $maxNumber;
+	}
+
+	/**
+	 * Lars Peipmann: Function $pageRepository->getCurrentPageCacheConfiguration is protected..
+	 * Because of that I had to copy the code into my own class.
+	 *
+	 * Obtains a list of table/pid pairs to consider for page caching.
+	 *
+	 * TS configuration looks like this:
+	 *
+	 * The cache lifetime of all pages takes starttime and endtime of news records of page 14 into account:
+	 * config.cache.all = tt_news:14
+	 *
+	 * The cache lifetime of page 42 takes starttime and endtime of news records of page 15 and addresses of page 16 into account:
+	 * config.cache.42 = tt_news:15,tt_address:16
+	 *
+	 * @param \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $pageRepository
+	 * @return array Array of 'tablename:pid' pairs. There is at least a current page id in the array
+	 * @see tslib_fe::calculatePageCacheTimeout()
+	 */
+	protected function getCurrentPageCacheConfiguration(\TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $pageRepository) {
+		$result = array('tt_content:' . $pageRepository->id);
+		if (isset($pageRepository->config['config']['cache.'][$pageRepository->id])) {
+			$result = array_merge($result, \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $pageRepository->config['config']['cache.'][$pageRepository->id]));
+		}
+		if (isset($pageRepository->config['config']['cache.']['all'])) {
+			$result = array_merge($result, \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $pageRepository->config['config']['cache.']['all']));
+		}
+		return array_unique($result);
 	}
 }
 
