@@ -3,7 +3,7 @@
 /***************************************************************
  * Extension Manager/Repository config file for ext "lp_access".
  *
- * Auto generated 24-07-2013 16:00
+ * Auto generated 04-08-2013 13:19
  *
  * Manual updates:
  * Only the data in the array - everything else is removed by next
@@ -32,14 +32,21 @@ $EM_CONF[$_EXTKEY] = array (
 	'author_company' => '',
 	'CGLcompliance' => NULL,
 	'CGLcompliance_note' => NULL,
-	'constraints' => array(
-		'depends' => array(
+	'constraints' => 
+	array (
+		'depends' => 
+		array (
 			'typo3' => '6.0.0-6.1.99',
 		),
-		'conflicts' => array(
+		'conflicts' => 
+		array (
 		),
-		'suggests' => array(
+		'suggests' => 
+		array (
 		),
+	),
+	'suggests' => 
+	array (
 	),
 );
 
