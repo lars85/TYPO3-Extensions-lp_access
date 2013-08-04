@@ -4,7 +4,7 @@ namespace LarsPeipmann\LpAccess\Service;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2013 Lars Peipmann <lp@lightwerk.com>, Lightwerk
+ *  (c) 2013 Lars Peipmann <Lars@Peipmann.de>
  *
  *  All rights reserved
  *
@@ -27,9 +27,18 @@ namespace LarsPeipmann\LpAccess\Service;
 
 class TCAService implements \TYPO3\CMS\Core\SingletonInterface {
 
-	static public function addHoursFieldToTable($table, $palette = 'access', $insertionPosition = 'before:fe_group') {
+	/**
+	 * Adds enable column tx_lpaccess_hours to a table.
+	 *
+	 * @param string $table Table Name
+	 * @param string $fieldName Field Name
+	 * @param string $palette Palette
+	 * @param string $insertionPosition Insert Position
+	 * @return void
+	 */
+	static public function addHoursFieldToTable($table, $fieldName = 'tx_lpaccess_hours', $palette = 'access', $insertionPosition = 'before:fe_group') {
 		$tempColumns = array(
-			'tx_lpaccess_hours' => array(
+			$fieldName => array(
 				'exclude' => 1,
 				'label' => 'LLL:EXT:lp_access/Resources/Private/Language/locallang.xlf:column.label',
 				'config' => array(
@@ -39,10 +48,10 @@ class TCAService implements \TYPO3\CMS\Core\SingletonInterface {
 			),
 		);
 
-		$GLOBALS['TCA'][$table]['ctrl']['enablecolumns']['tx_lpaccess_hours'] = 'tx_lpaccess_hours';
+		$GLOBALS['TCA'][$table]['ctrl']['enablecolumns']['tx_lpaccess_hours'] = $fieldName;
 
 		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns($table, $tempColumns);
-		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addFieldsToPalette($table, $palette, '--linebreak--, tx_lpaccess_hours, --linebreak--', $insertionPosition);
+		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addFieldsToPalette($table, $palette, '--linebreak--, ' . $fieldName . ', --linebreak--', $insertionPosition);
 	}
 
 }

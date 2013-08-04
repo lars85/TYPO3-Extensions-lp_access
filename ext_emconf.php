@@ -12,7 +12,7 @@
 
 $EM_CONF[$_EXTKEY] = array (
 	'title' => 'Access Hours',
-	'description' => 'Extend the access tabs with a selection of online hours for a page or content element. Doc: http://docs.typo3.org/typo3cms/extensions/lp_access/ and Git: https://github.com/lars85/TYPO3-Extensions-lp_access/',
+	'description' => 'Extend the access tab with a selection of online hours in content elements. Doc: http://docs.typo3.org/typo3cms/extensions/lp_access/ and Git: https://github.com/lars85/TYPO3-Extensions-lp_access/',
 	'category' => 'plugin',
 	'shy' => 0,
 	'version' => '1.0.0',

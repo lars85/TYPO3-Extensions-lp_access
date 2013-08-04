@@ -4,7 +4,7 @@ namespace LarsPeipmann\LpAccess\UserFunction;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2013 Lars Peipmann <lp@lightwerk.com>, Lightwerk
+ *  (c) 2013 Lars Peipmann <Lars@Peipmann.de>
  *
  *  All rights reserved
  *
@@ -27,41 +27,45 @@ namespace LarsPeipmann\LpAccess\UserFunction;
 
 class HoursSelectionUserFunction implements \TYPO3\CMS\Core\SingletonInterface {
 
-	protected $modTSConfigs;
+	/**
+	 * Object Manager
+	 *
+	 * @var \TYPO3\CMS\Extbase\Object\ObjectManager
+	 * @inject
+	 */
+	protected $objectManager;
 
 	/**
-	 * Renders the cropping link and fancybox.
+	 * Configuration Manager
 	 *
-	 * @param array $PA
-	 * @param $fObj
-	 * @return string HTML output
+	 * @var \LarsPeipmann\LpAccess\Service\ConfigurationService
+	 * @inject
+	 */
+	protected $configurationService;
+
+	/**
+	 * Page Renderer
+	 *
+	 * @var \TYPO3\CMS\Core\Page\PageRenderer
+	 * @inject
+	 */
+	protected $pageRenderer;
+
+	/**
+	 * Renders the HTML output for the "Hours Access" field.
+	 *
+	 * @param array $params
+	 * @param \TYPO3\CMS\Backend\Form\FormEngine $parentObject
+	 * @return string Rendered HTML output for the field
 	 */
 	public function process($params, $parentObject) {
-		$extensionPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('lp_access');
-		$extensionRelativePath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('lp_access');
-		$modTSConfig = $this->getModTSConfig($params['row']['uid']);
+		$this->injectServices();
 
-		/** @var \TYPO3\CMS\Extbase\Object\ObjectManager $objectManager */
-		$objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
-
-		/** @var \TYPO3\CMS\Core\Page\PageRenderer $pageRenderer */
-		$pageRenderer = $objectManager->get('TYPO3\\CMS\\Core\\Page\\PageRenderer');
-
-		$pageRenderer->addJsFile($extensionRelativePath . 'Resources/Public/JavaScript/lp_access.js');
-		$pageRenderer->addCssFile($extensionRelativePath . 'Resources/Public/Stylesheets/lp_access.css');
-
-		/** @var \TYPO3\CMS\Fluid\View\StandaloneView $view */
-		$view = $objectManager->get('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
-		$view->setTemplatePathAndFilename($extensionPath . 'Resources/Private/Templates/HoursSelectionUserFunction/Process.html');
-		$view->setLayoutRootPath($extensionPath . 'Resources/Private/Layouts/');
-		$view->setPartialRootPath($extensionPath . 'Resources/Private/Partials/');
-
-		$days = \TYPO3\CMS\Core\Utility\GeneralUtility::intExplode(',', $modTSConfig['days'], TRUE);
-		sort($days);
-		$hours = \TYPO3\CMS\Core\Utility\GeneralUtility::intExplode(',', $modTSConfig['hours'], TRUE);
-		sort($hours);
-
+		$pageUid = $params['row']['pid'];
+		$view = $this->getView();
 		$activeValues = \TYPO3\CMS\Core\Utility\GeneralUtility::intExplode(',', $params['itemFormElValue'], TRUE);
+		$days = $this->configurationService->getDays($pageUid);
+		$hours = $this->configurationService->getHours($pageUid);
 
 		$rows = array();
 		foreach ($days as $day) {
@@ -86,9 +90,43 @@ class HoursSelectionUserFunction implements \TYPO3\CMS\Core\SingletonInterface {
 		return $view->render();
 	}
 
-	protected function getModTSConfig($pageUid) {
-		$modTSConfig = \TYPO3\CMS\Backend\Utility\BackendUtility::getModTSconfig($pageUid, 'tx_lpaccess');
-		return $modTSConfig['properties'];
+	/**
+	 * Returns a fluid view.
+	 *
+	 * @return \TYPO3\CMS\Fluid\View\StandaloneView $view
+	 */
+	protected function getView() {
+		$extensionPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('lp_access');
+		$extensionRelativePath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('lp_access');
+
+		$this->pageRenderer->addJsFile($extensionRelativePath . 'Resources/Public/JavaScript/lp_access.js');
+		$this->pageRenderer->addCssFile($extensionRelativePath . 'Resources/Public/Stylesheets/lp_access.css');
+
+		/** @var \TYPO3\CMS\Fluid\View\StandaloneView $view */
+		$view = $this->objectManager->get('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
+		$view->setTemplatePathAndFilename($extensionPath . 'Resources/Private/Templates/HoursSelectionUserFunction/Process.html');
+		$view->setLayoutRootPath($extensionPath . 'Resources/Private/Layouts/');
+		$view->setPartialRootPath($extensionPath . 'Resources/Private/Partials/');
+
+		return $view;
+	}
+
+	/**
+	 * This function injects the needed objects.
+	 * Automatic injects with PHPDoc (at)inject are not working so far.
+	 *
+	 * @return void
+	 */
+	protected function injectServices() {
+		if (!($this->objectManager instanceof \TYPO3\CMS\Extbase\Object\ObjectManager)) {
+			$this->objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
+		}
+		if (!($this->configurationService instanceof \LarsPeipmann\LpAccess\Service\ConfigurationService)) {
+			$this->configurationService = $this->objectManager->get('LarsPeipmann\\LpAccess\\Service\\ConfigurationService');
+		}
+		if (!($this->pageRenderer instanceof \TYPO3\CMS\Core\Page\PageRenderer)) {
+			$this->pageRenderer = $this->objectManager->get('TYPO3\\CMS\\Core\\Page\\PageRenderer');
+		}
 	}
 }
 

@@ -4,7 +4,7 @@ namespace LarsPeipmann\LpAccess\Hook;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2013 Lars Peipmann <lp@lightwerk.com>, Lightwerk
+ *  (c) 2013 Lars Peipmann <Lars@Peipmann.de>
  *
  *  All rights reserved
  *
@@ -28,11 +28,11 @@ namespace LarsPeipmann\LpAccess\Hook;
 class AddEnableColumnsHook implements \TYPO3\CMS\Core\SingletonInterface {
 
 	/**
-	 * Renders the cropping link and fancybox.
+	 * Adds where clause tx_lpaccess_hours to enableColumns.
 	 *
-	 * @param array $PA
-	 * @param $fObj
-	 * @return string HTML output
+	 * @param array $params
+	 * @param \TYPO3\CMS\Frontend\Page\PageRepository $pageRepository
+	 * @return string Additional where
 	 */
 	public function process(array $params, \TYPO3\CMS\Frontend\Page\PageRepository $pageRepository) {
 		$query = '';

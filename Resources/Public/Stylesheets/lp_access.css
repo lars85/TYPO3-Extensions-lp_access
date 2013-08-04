@@ -34,14 +34,11 @@
 }
 
 .tx-lpaccess td.active div {
-	background-color: #1e5799;
-	background: linear-gradient(to bottom, #1e5799 0%, #246BBB 100%);
 	border-color: #ECECEC;
-}
-.tx-lpaccess td.changed div {
-	border-color: #FFE8B3;
+	background-color: #3E913F;
+	background: linear-gradient(to bottom, #3E913F 0%, #307631 100%);
 }
 
-.tx-lpaccess td.active:hover {
-	background-color: transparent;
+.tx-lpaccess td.changed div {
+	border-color: #FFE8B3;
 }

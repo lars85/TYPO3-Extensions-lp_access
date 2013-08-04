@@ -5,7 +5,7 @@
 				<th></th>
 				<f:for each="{hours}" as="hour">
 					<th data-hour="{hour}">
-						<f:translate key="LLL:EXT:lp_access/Resources/Private/Language/locallang.xlf:hour.{hour}">
+						<f:translate extensionName="lp_access" key="hour.{hour}">
 							{hour}
 						</f:translate>
 					</th>
@@ -16,12 +16,13 @@
 			<f:for each="{rows}" key="day" as="columns">
 				<tr>
 					<th data-day="{day}">
-						<f:translate key="LLL:EXT:lp_access/Resources/Private/Language/locallang.xlf:day.{day}">
+						<f:translate extensionName="lp_access" key="day.{day}">
 							{day}
 						</f:translate>
 					</th>
 					<f:for each="{columns}" key="hour" as="column">
-						<td data-day="{day}"
+						<td title="{f:translate(extensionName: 'lp_access', key: 'day.label')}: {f:translate(extensionName: 'lp_access', key: 'day.{day}.full', default: '{day}')}&#xD;{f:translate(extensionName: 'lp_access', key: 'hour.label')}: {f:translate(extensionName: 'lp_access', key: 'hour.{hour}.title', default: '{hour}:00 - {hour}:59')}"
+							data-day="{day}"
 							data-hour="{hour}"
 							data-value="{column.value}"{f:if(condition: '{column.active}', then: ' class="active"', else: '')}>
 							<div></div>

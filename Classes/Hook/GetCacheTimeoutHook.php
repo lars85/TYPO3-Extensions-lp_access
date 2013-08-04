@@ -28,9 +28,11 @@ namespace LarsPeipmann\LpAccess\Hook;
 class GetCacheTimeoutHook implements \TYPO3\CMS\Core\SingletonInterface {
 
 	/**
+	 * Calculates cache timeout in seconds for enable column tx_lpaccess_hours.
+	 *
 	 * @param array $params
 	 * @param \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $pageRepository
-	 * @return int
+	 * @return integer Cache timeout in seconds
 	 */
 	public function process(array $params, \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $pageRepository) {
 		$cacheTimeout = $params['cacheTimeout'];
@@ -38,19 +40,21 @@ class GetCacheTimeoutHook implements \TYPO3\CMS\Core\SingletonInterface {
 		$now = $GLOBALS['ACCESS_TIME'];
 
 		foreach ($tablesToConsider as $tableDef) {
-			$cacheTimeout = $this->getLowerCacheTimeoutForRecord($tableDef, $now, $pageRepository, $cacheTimeout);
+			$tempCacheTimeout = $this->getLowerCacheTimeoutForRecord($tableDef, $now, $pageRepository, $cacheTimeout);
+			if ($tempCacheTimeout) {
+				$cacheTimeout = $tempCacheTimeout;
+			}
 		}
 
 		return $cacheTimeout;
 	}
 
 	/**
-	 * Find the minimum starttime or endtime value in the table and pid that is greater than the current time.
+	 * Find cate timeout in seconds for one table and page for the enable column tx_lpaccess_hours.
 	 *
 	 * @param string $tableDef Table definition (format tablename:pid)
 	 * @param integer $now "Now" time value
-	 * @return integer Value of the next start/stop time or PHP_INT_MAX if not found
-	 * @see tslib_fe::calculatePageCacheTimeout()
+	 * @return boolean|integer Cache timeout in seconds, FALSE if timeout is not lower then the parameter $cacheTimeout
 	 */
 	protected function getLowerCacheTimeoutForRecord($tableDef, $now, \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $pageRepository, $cacheTimeout) {
 		list($tableName, $pageUid) = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(':', $tableDef);
@@ -58,7 +62,7 @@ class GetCacheTimeoutHook implements \TYPO3\CMS\Core\SingletonInterface {
 		$enableFields = $pageRepository->sys_page->enableFields($tableName, $showHidden, array('tx_lpaccess_hours' => TRUE));
 
 		if (empty($GLOBALS['TCA'][$tableName]['ctrl']['enablecolumns']['tx_lpaccess_hours'])) {
-			return $cacheTimeout;
+			return FALSE;
 		}
 
 		$hoursField = $GLOBALS['TCA'][$tableName]['ctrl']['enablecolumns']['tx_lpaccess_hours'];
@@ -73,7 +77,7 @@ class GetCacheTimeoutHook implements \TYPO3\CMS\Core\SingletonInterface {
 			$values[] = intval($tempDay . str_pad($tempHour, 2, 0, STR_PAD_LEFT));
 		}
 		if (empty($values)) {
-			return $cacheTimeout;
+			return FALSE;
 		}
 
 		/** @var $typo3Db \TYPO3\CMS\Core\Database\DatabaseConnection */
@@ -87,19 +91,26 @@ class GetCacheTimeoutHook implements \TYPO3\CMS\Core\SingletonInterface {
 			$number = $this->getFirstChange($values, $fieldValues, $number);
 		}
 		if ($number == count($values)) {
-			return $cacheTimeout;
+			return FALSE;
 		}
 
-		$newCacheTimeoutDate = $this->getDateFromValue($values[$number], $now);
+		$newCacheTimeoutDate = $this->getNextDateFromValue($values[$number], $now);
 		$newCacheTimeout = $newCacheTimeoutDate->getTimestamp() - $now;
-		if ($newCacheTimeout < $cacheTimeout) {
-			$cacheTimeout = $newCacheTimeout;
+		if ($newCacheTimeout >= $cacheTimeout) {
+			return FALSE;
 		}
 
-		return $cacheTimeout;
+		return $newCacheTimeout;
 	}
 
-	protected function getDateFromValue($value, $now) {
+	/**
+	 * Returns the next date.
+	 *
+	 * @param $value string Day hour combo
+	 * @param $now integer Timestamp (seconds)
+	 * @return \DateTime
+	 */
+	protected function getNextDateFromValue($value, $now) {
 		$valueDay = intval(floor($value / 100));
 		$valueHour = $value % 100;
 
@@ -119,6 +130,14 @@ class GetCacheTimeoutHook implements \TYPO3\CMS\Core\SingletonInterface {
 		return $date;
 	}
 
+	/**
+	 * Returns the first change in $fieldValues.
+	 *
+	 * @param $values array of day hour values (continuous)
+	 * @param $fieldValues array of day hour values from database
+	 * @param $maxNumber integer Maximum number
+	 * @return integer Number of the first change in $fieldValues
+	 */
 	protected function getFirstChange($values, $fieldValues, $maxNumber) {
 		$state = in_array($values[0], $fieldValues);
 		foreach ($values as $number => $value) {

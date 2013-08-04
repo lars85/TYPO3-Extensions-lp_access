@@ -1,61 +1,78 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2013-03-27T07:36:46Z" product-name="lp_access">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2013-03-27T07:36:46Z" product-name="lp_access">
 		<header/>
 		<body>
 			<trans-unit id="column.label">
 				<source>Access Hours</source>
+				<target>Zeitplaner</target>
 			</trans-unit>
 
 			<trans-unit id="hour.label">
 				<source>Hour</source>
+				<target>Stunde</target>
 			</trans-unit>
 			<trans-unit id="day.label">
 				<source>Day</source>
+				<target>Tag</target>
 			</trans-unit>
 
 			<trans-unit id="day.1">
 				<source>Mo</source>
+				<target>Mo</target>
 			</trans-unit>
 			<trans-unit id="day.2">
 				<source>Tu</source>
+				<target>Di</target>
 			</trans-unit>
 			<trans-unit id="day.3">
 				<source>We</source>
+				<target>Mi</target>
 			</trans-unit>
 			<trans-unit id="day.4">
 				<source>Th</source>
+				<target>Do</target>
 			</trans-unit>
 			<trans-unit id="day.5">
 				<source>Fr</source>
+				<target>Fr</target>
 			</trans-unit>
 			<trans-unit id="day.6">
 				<source>Sa</source>
+				<target>Sa</target>
 			</trans-unit>
 			<trans-unit id="day.7">
 				<source>Su</source>
+				<target>So</target>
 			</trans-unit>
 
 			<trans-unit id="day.1.full">
 				<source>Monday</source>
+				<target>Montag</target>
 			</trans-unit>
 			<trans-unit id="day.2.full">
 				<source>Tuesday</source>
+				<target>Dienstag</target>
 			</trans-unit>
 			<trans-unit id="day.3.full">
 				<source>Wednesday</source>
+				<target>Mittwoch</target>
 			</trans-unit>
 			<trans-unit id="day.4.full">
 				<source>Thursday</source>
+				<target>Donnerstag</target>
 			</trans-unit>
 			<trans-unit id="day.5.full">
 				<source>Friday</source>
+				<target>Freitag</target>
 			</trans-unit>
 			<trans-unit id="day.6.full">
 				<source>Saturday</source>
+				<target>Samstag</target>
 			</trans-unit>
 			<trans-unit id="day.7.full">
 				<source>Sunday</source>
+				<target>Sonntag</target>
 			</trans-unit>
 		</body>
 	</file>
