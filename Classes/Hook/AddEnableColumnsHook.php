@@ -34,7 +34,7 @@ class AddEnableColumnsHook implements \TYPO3\CMS\Core\SingletonInterface {
 	 * @param \TYPO3\CMS\Frontend\Page\PageRepository $pageRepository
 	 * @return string Additional where
 	 */
-	public function process(array $params, \TYPO3\CMS\Frontend\Page\PageRepository $pageRepository) {
+	public function process(array $params, $pageRepository) {
 		$query = '';
 		if (!empty($params['ctrl']['enablecolumns']['tx_lpaccess_hours']) && empty($params['ignore_array']['tx_lpaccess_hours'])) {
 			$table = $params['table'];
