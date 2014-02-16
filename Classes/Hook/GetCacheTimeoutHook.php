@@ -80,13 +80,11 @@ class GetCacheTimeoutHook implements \TYPO3\CMS\Core\SingletonInterface {
 			return FALSE;
 		}
 
-		/** @var $typo3Db \TYPO3\CMS\Core\Database\DatabaseConnection */
-		$typo3Db = &$GLOBALS['TYPO3_DB'];
 		$where = $hoursField . ' REGEXP "' . implode('|', $values) . '" AND pid = ' . $pageUid . $enableFields;
-		$res = $typo3Db->exec_SELECTquery($hoursField, $tableName, $where);
+		$res = $this->getDatabaseConnection()->exec_SELECTquery($hoursField, $tableName, $where);
 
 		$number = count($values);
-		while ($row = $typo3Db->sql_fetch_assoc($res)) {
+		while ($row = $this->getDatabaseConnection()->sql_fetch_assoc($res)) {
 			$fieldValues = \TYPO3\CMS\Core\Utility\GeneralUtility::intExplode(',', $row[$hoursField], TRUE);
 			$number = $this->getFirstChange($values, $fieldValues, $number);
 		}
@@ -184,6 +182,15 @@ class GetCacheTimeoutHook implements \TYPO3\CMS\Core\SingletonInterface {
 			$result = array_merge($result, \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $pageRepository->config['config']['cache.']['all']));
 		}
 		return array_unique($result);
+	}
+
+	/**
+	 * Returns the database connection
+	 *
+	 * @return \TYPO3\CMS\Core\Database\DatabaseConnection
+	 */
+	protected function getDatabaseConnection() {
+		return $GLOBALS['TYPO3_DB'];
 	}
 }
 
