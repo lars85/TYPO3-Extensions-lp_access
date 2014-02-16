@@ -120,9 +120,9 @@ class GetCacheTimeoutHook implements \TYPO3\CMS\Core\SingletonInterface {
 		$currentDay = intval($date->format('N'));
 
 		if ($valueDay > $currentDay) {
-			$date->add(new \DateInterval(($valueDay - $currentDay) . 'd'));
+			$date->add(new \DateInterval('P' . ($valueDay - $currentDay) . 'D'));
 		} elseif ($valueDay < $currentDay) {
-			$date->sub(new \DateInterval((7 - $currentDay + $valueDay) . 'd'));
+			$date->sub(new \DateInterval('P' . (7 - $currentDay + $valueDay) . 'D'));
 		}
 
 		$date->setTime($valueHour, 0);
