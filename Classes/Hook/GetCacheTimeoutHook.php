@@ -187,4 +187,3 @@ class GetCacheTimeoutHook implements \TYPO3\CMS\Core\SingletonInterface {
 	}
 }
 
-?>

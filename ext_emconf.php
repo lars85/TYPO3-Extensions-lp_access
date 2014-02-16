@@ -49,5 +49,3 @@ $EM_CONF[$_EXTKEY] = array (
   'user' => 'lars85',
   'comment' => 'Solves problem with directmail',
 );
-
-?>

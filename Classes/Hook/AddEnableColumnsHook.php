@@ -47,5 +47,3 @@ class AddEnableColumnsHook implements \TYPO3\CMS\Core\SingletonInterface {
 		return $query;
 	}
 }
-
-?>

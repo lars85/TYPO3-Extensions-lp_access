@@ -129,5 +129,3 @@ class HoursSelectionUserFunction implements \TYPO3\CMS\Core\SingletonInterface {
 		}
 	}
 }
-
-?>

@@ -55,5 +55,3 @@ class TCAService implements \TYPO3\CMS\Core\SingletonInterface {
 	}
 
 }
-
-?>
