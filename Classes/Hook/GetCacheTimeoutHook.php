@@ -66,15 +66,15 @@ class GetCacheTimeoutHook implements \TYPO3\CMS\Core\SingletonInterface {
 		}
 
 		$hoursField = $GLOBALS['TCA'][$tableName]['ctrl']['enablecolumns']['tx_lpaccess_hours'];
-		$day = intval(date('N', $now));
-		$hour = intval(date('G', $now));
+		$day = (int) date('N', $now);
+		$hour = (int) date('G', $now);
 		$cacheTimeoutHours = floor($cacheTimeout/60/60) + 1;
 
 		$values = array();
 		for ($i = 0; $i <= $cacheTimeoutHours; $i++) {
 			$tempDay = ($day + floor(($hour + $i) / 24)) % 7;
 			$tempHour = ($hour + $i) % 24;
-			$values[] = intval($tempDay . str_pad($tempHour, 2, 0, STR_PAD_LEFT));
+			$values[] = (int) ($tempDay . str_pad($tempHour, 2, 0, STR_PAD_LEFT));
 		}
 		if (empty($values)) {
 			return FALSE;
@@ -111,13 +111,13 @@ class GetCacheTimeoutHook implements \TYPO3\CMS\Core\SingletonInterface {
 	 * @return \DateTime
 	 */
 	protected function getNextDateFromValue($value, $now) {
-		$valueDay = intval(floor($value / 100));
+		$valueDay = (int) floor($value / 100);
 		$valueHour = $value % 100;
 
 		$date = new \DateTime();
 		$date->setTimestamp($now);
 
-		$currentDay = intval($date->format('N'));
+		$currentDay = (int) $date->format('N');
 
 		if ($valueDay > $currentDay) {
 			$date->add(new \DateInterval('P' . ($valueDay - $currentDay) . 'D'));
