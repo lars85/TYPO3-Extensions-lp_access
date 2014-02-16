@@ -25,6 +25,9 @@ namespace LarsPeipmann\LpAccess\UserFunction;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use \TYPO3\CMS\Core\Utility\GeneralUtility;
+use \TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+
 class HoursSelectionUserFunction implements \TYPO3\CMS\Core\SingletonInterface {
 
 	/**
@@ -59,11 +62,11 @@ class HoursSelectionUserFunction implements \TYPO3\CMS\Core\SingletonInterface {
 	 * @return string Rendered HTML output for the field
 	 */
 	public function process($params, $parentObject) {
-		$this->injectServices();
+		$this->initializeObject();
 
 		$pageUid = $params['row']['pid'];
 		$view = $this->getView();
-		$activeValues = \TYPO3\CMS\Core\Utility\GeneralUtility::intExplode(',', $params['itemFormElValue'], TRUE);
+		$activeValues = GeneralUtility::intExplode(',', $params['itemFormElValue'], TRUE);
 		$days = $this->configurationService->getDays($pageUid);
 		$hours = $this->configurationService->getHours($pageUid);
 
@@ -96,11 +99,11 @@ class HoursSelectionUserFunction implements \TYPO3\CMS\Core\SingletonInterface {
 	 * @return \TYPO3\CMS\Fluid\View\StandaloneView $view
 	 */
 	protected function getView() {
-		$extensionPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('lp_access');
-		$extensionRelativePath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('lp_access');
+		$extensionPath = ExtensionManagementUtility::extPath('lp_access');
+		$extensionRelativePath = ExtensionManagementUtility::extRelPath('lp_access');
 
-		$this->pageRenderer->addJsFile($extensionRelativePath . 'Resources/Public/JavaScript/lp_access.js');
-		$this->pageRenderer->addCssFile($extensionRelativePath . 'Resources/Public/Stylesheets/lp_access.css');
+		$this->pageRenderer->addJsFile($extensionRelativePath . 'Resources/Public/JavaScript/LpAccess.js');
+		$this->pageRenderer->addCssFile($extensionRelativePath . 'Resources/Public/Stylesheets/LpAccess.css');
 
 		/** @var \TYPO3\CMS\Fluid\View\StandaloneView $view */
 		$view = $this->objectManager->get('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
@@ -117,14 +120,14 @@ class HoursSelectionUserFunction implements \TYPO3\CMS\Core\SingletonInterface {
 	 *
 	 * @return void
 	 */
-	protected function injectServices() {
-		if (!($this->objectManager instanceof \TYPO3\CMS\Extbase\Object\ObjectManager)) {
-			$this->objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
+	protected function initializeObject() {
+		if (!$this->objectManager) {
+			$this->objectManager = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
 		}
-		if (!($this->configurationService instanceof \LarsPeipmann\LpAccess\Service\ConfigurationService)) {
+		if (!$this->configurationService) {
 			$this->configurationService = $this->objectManager->get('LarsPeipmann\\LpAccess\\Service\\ConfigurationService');
 		}
-		if (!($this->pageRenderer instanceof \TYPO3\CMS\Core\Page\PageRenderer)) {
+		if (!$this->pageRenderer) {
 			$this->pageRenderer = $this->objectManager->get('TYPO3\\CMS\\Core\\Page\\PageRenderer');
 		}
 	}

@@ -25,6 +25,9 @@ namespace LarsPeipmann\LpAccess\Service;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 class ConfigurationService implements \TYPO3\CMS\Core\SingletonInterface {
 
 	/**
@@ -42,7 +45,7 @@ class ConfigurationService implements \TYPO3\CMS\Core\SingletonInterface {
 	 */
 	public function getModTSConfig($pageUid) {
 		if (empty($this->modTSConfigPerPage[$pageUid])) {
-			$modTSConfig = \TYPO3\CMS\Backend\Utility\BackendUtility::getModTSconfig($pageUid, 'tx_lpaccess');
+			$modTSConfig = BackendUtility::getModTSconfig($pageUid, 'tx_lpaccess');
 			$this->modTSConfigPerPage[$pageUid] = $modTSConfig['properties'];
 		}
 		return $this->modTSConfigPerPage[$pageUid];
@@ -56,7 +59,7 @@ class ConfigurationService implements \TYPO3\CMS\Core\SingletonInterface {
 	 */
 	public function getDays($pageUid) {
 		$modTSConfig = $this->getModTSConfig($pageUid);
-		$days = \TYPO3\CMS\Core\Utility\GeneralUtility::intExplode(',', $modTSConfig['days'], TRUE);
+		$days = GeneralUtility::intExplode(',', $modTSConfig['days'], TRUE);
 		return $days;
 	}
 
@@ -68,7 +71,7 @@ class ConfigurationService implements \TYPO3\CMS\Core\SingletonInterface {
 	 */
 	public function getHours($pageUid) {
 		$modTSConfig = $this->getModTSConfig($pageUid);
-		$hours = \TYPO3\CMS\Core\Utility\GeneralUtility::intExplode(',', $modTSConfig['hours'], TRUE);
+		$hours = GeneralUtility::intExplode(',', $modTSConfig['hours'], TRUE);
 		return $hours;
 	}
 }

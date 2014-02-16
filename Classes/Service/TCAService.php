@@ -25,6 +25,8 @@ namespace LarsPeipmann\LpAccess\Service;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use \TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+
 class TCAService implements \TYPO3\CMS\Core\SingletonInterface {
 
 	/**
@@ -50,8 +52,8 @@ class TCAService implements \TYPO3\CMS\Core\SingletonInterface {
 
 		$GLOBALS['TCA'][$table]['ctrl']['enablecolumns']['tx_lpaccess_hours'] = $fieldName;
 
-		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns($table, $tempColumns);
-		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addFieldsToPalette($table, $palette, '--linebreak--, ' . $fieldName . ', --linebreak--', $insertionPosition);
+		ExtensionManagementUtility::addTCAcolumns($table, $tempColumns);
+		ExtensionManagementUtility::addFieldsToPalette($table, $palette, '--linebreak--, ' . $fieldName . ', --linebreak--', $insertionPosition);
 	}
 
 }

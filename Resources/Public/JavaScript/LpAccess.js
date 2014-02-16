@@ -1,13 +1,15 @@
-var LpAccess_ClickHandler;
+/*jslint browser:true, plusplus: true*/
+/*global TYPO3*/
 
 (function ($) {
     'use strict';
 
-    var LpAccess_ClickHandler = function () {
+    var LpAccessClickHandler = function () {
         var $this = $(this),
             $root = $this.closest(".tx-lpaccess"),
             $input = $root.find("input"),
-            activeValues = Array();
+            activeValues = [],
+            $activeTds;
 
         if ($this.hasClass("active")) {
             $this.removeClass("active");
@@ -19,17 +21,19 @@ var LpAccess_ClickHandler;
             $this.addClass("changed");
         }
 
-        var $activeTds = $root.find("td.active");
-        $.each($activeTds, function() {
+        $activeTds = $root.find("td.active");
+        $.each($activeTds, function () {
             activeValues.push($(this).data("value"));
         });
 
         $input.val(activeValues.join(","));
-        $input.trigger('onchange');
+        $input.trigger("onchange");
     };
 
-    // DOM ready
     $(function () {
-        $(".tx-lpaccess td").click(LpAccess_ClickHandler);
+        var $elements = $(".tx-lpaccess td");
+        if ($elements.length) {
+            $elements.click(LpAccessClickHandler);
+        }
     });
-})(TYPO3.jQuery);
+}(TYPO3.jQuery));

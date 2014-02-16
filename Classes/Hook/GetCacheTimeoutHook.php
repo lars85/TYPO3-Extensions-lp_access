@@ -25,6 +25,9 @@ namespace LarsPeipmann\LpAccess\Hook;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use \TYPO3\CMS\Core\Utility\GeneralUtility;
+use \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+
 class GetCacheTimeoutHook implements \TYPO3\CMS\Core\SingletonInterface {
 
 	/**
@@ -34,7 +37,7 @@ class GetCacheTimeoutHook implements \TYPO3\CMS\Core\SingletonInterface {
 	 * @param \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $pageRepository
 	 * @return integer Cache timeout in seconds
 	 */
-	public function process(array $params, \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $pageRepository) {
+	public function process(array $params, TypoScriptFrontendController $pageRepository) {
 		$cacheTimeout = $params['cacheTimeout'];
 		$tablesToConsider = $this->getCurrentPageCacheConfiguration($pageRepository);
 		$now = $GLOBALS['ACCESS_TIME'];
@@ -56,8 +59,8 @@ class GetCacheTimeoutHook implements \TYPO3\CMS\Core\SingletonInterface {
 	 * @param integer $now "Now" time value
 	 * @return boolean|integer Cache timeout in seconds, FALSE if timeout is not lower then the parameter $cacheTimeout
 	 */
-	protected function getLowerCacheTimeoutForRecord($tableDef, $now, \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $pageRepository, $cacheTimeout) {
-		list($tableName, $pageUid) = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(':', $tableDef);
+	protected function getLowerCacheTimeoutForRecord($tableDef, $now, TypoScriptFrontendController $pageRepository, $cacheTimeout) {
+		list($tableName, $pageUid) = GeneralUtility::trimExplode(':', $tableDef);
 		$showHidden = $tableName === 'pages' ? $pageRepository->showHiddenPage : $pageRepository->showHiddenRecords;
 		$enableFields = $pageRepository->sys_page->enableFields($tableName, $showHidden, array('tx_lpaccess_hours' => TRUE));
 
@@ -85,7 +88,7 @@ class GetCacheTimeoutHook implements \TYPO3\CMS\Core\SingletonInterface {
 
 		$number = count($values);
 		while ($row = $this->getDatabaseConnection()->sql_fetch_assoc($res)) {
-			$fieldValues = \TYPO3\CMS\Core\Utility\GeneralUtility::intExplode(',', $row[$hoursField], TRUE);
+			$fieldValues = GeneralUtility::intExplode(',', $row[$hoursField], TRUE);
 			$number = $this->getFirstChange($values, $fieldValues, $number);
 		}
 		if ($number == count($values)) {
@@ -173,13 +176,19 @@ class GetCacheTimeoutHook implements \TYPO3\CMS\Core\SingletonInterface {
 	 * @return array Array of 'tablename:pid' pairs. There is at least a current page id in the array
 	 * @see tslib_fe::calculatePageCacheTimeout()
 	 */
-	protected function getCurrentPageCacheConfiguration(\TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $pageRepository) {
+	protected function getCurrentPageCacheConfiguration(TypoScriptFrontendController $pageRepository) {
 		$result = array('tt_content:' . $pageRepository->id);
 		if (isset($pageRepository->config['config']['cache.'][$pageRepository->id])) {
-			$result = array_merge($result, \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $pageRepository->config['config']['cache.'][$pageRepository->id]));
+			$result = array_merge(
+				$result,
+				GeneralUtility::trimExplode(',', $pageRepository->config['config']['cache.'][$pageRepository->id])
+			);
 		}
 		if (isset($pageRepository->config['config']['cache.']['all'])) {
-			$result = array_merge($result, \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $pageRepository->config['config']['cache.']['all']));
+			$result = array_merge(
+				$result,
+				GeneralUtility::trimExplode(',', $pageRepository->config['config']['cache.']['all'])
+			);
 		}
 		return array_unique($result);
 	}
