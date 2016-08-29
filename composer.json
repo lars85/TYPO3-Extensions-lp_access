@@ -1,5 +1,5 @@
 {
-    "name": "typo3-ter/lp-access",
+    "name": "lars-peipmann/lp-access",
     "type": "typo3-cms-extension",
     "description": "Extend the access tab with a selection of online hours in content elements.",
     "homepage": "https://github.com/lars85/TYPO3-Extensions-lp_access",
